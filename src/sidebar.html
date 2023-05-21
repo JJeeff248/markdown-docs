@@ -1,0 +1,61 @@
+<head>
+    <title>Docs to MD</title>
+
+    <style>
+        #actions {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            margin-bottom: 1rem;
+        }
+
+        #actions input[type="button"] {
+            width: 30%;
+            background-color: #e1e1e1;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        #actions input[type="button"]:hover {
+            cursor: pointer;
+            background-color: #afafaf;
+        }
+
+        #output {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            background-color: #f7f7f7;
+        }
+    </style>
+
+    <script>
+        function copyOutput() {
+            const copyText = document.getElementById("output");
+            const range = document.createRange();
+            range.selectNode(copyText);
+            window.getSelection().addRange(range);
+            try {
+                const successful = document.execCommand("copy");
+                const message = successful
+                    ? "Copied the text"
+                    : "Unable to copy";
+                alert(message);
+            } catch (err) {
+                console.error("Unable to copy", err);
+            }
+        }
+    </script>
+</head>
+
+<div id="actions">
+    <input type="button" value="Copy" onclick="copyOutput()" />
+    <input
+        type="button"
+        value="Regenerate"
+        onclick="google.script.run.convertToMarkdown()"
+    />
+    <input type="button" value="Close" onclick="google.script.host.close()" />
+</div>
