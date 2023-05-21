@@ -23,6 +23,8 @@ function convertToMarkdown() {
             //     markdown += convertListItemToMarkdown(element.asListItem());
         } else if (element.getType() == DocumentApp.ElementType.EQUATION) {
             markdown += convertEquation(element);
+        } else if (element.getType() == DocumentApp.ElementType.TABLE) {
+            markdown += convertTableToMarkdown(element.asTable());
         } else if (element.getType() == DocumentApp.ElementType.LIST_ITEM) {
             markdown += convertListItemToMarkdown(element.asListItem());
         }
@@ -84,6 +86,30 @@ function convertHeader(heading) {
     return "";
 }
 
+function convertTableToMarkdown(table) {
+    let result = "";
+
+    for (let i = 0; i < table.getNumRows(); i++) {
+        let row = table.getRow(i);
+
+        for (let j = 0; j < row.getNumCells(); j++) {
+            let cell = row.getCell(j);
+            let text = cell.getText().replace(/\r/g, " ");
+
+            result += "| " + text;
+        }
+
+        result += " |\n";
+
+        if (i == 0) {
+            result += "|";
+            result += "---|".repeat(row.getNumCells()) + "\n";
+        }
+    }
+
+    return result;
+}
+
 function convertListItemToMarkdown(listItem) {
     let symbol = listItem.getGlyphType();
 
@@ -100,4 +126,3 @@ function convertListItemToMarkdown(listItem) {
     let text = listItem.getText();
     return symbol + text + "\n";
 }
-
