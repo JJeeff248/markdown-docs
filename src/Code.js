@@ -23,6 +23,8 @@ function convertToMarkdown() {
             //     markdown += convertListItemToMarkdown(element.asListItem());
         } else if (element.getType() == DocumentApp.ElementType.EQUATION) {
             markdown += convertEquation(element);
+        } else if (element.getType() == DocumentApp.ElementType.LIST_ITEM) {
+            markdown += convertListItemToMarkdown(element.asListItem());
         }
     }
 
@@ -37,7 +39,7 @@ function convertToMarkdown() {
 
 function convertParagraphToMarkdown(text, element) {
     let lineStart = "";
-    console.log("Element Type: " + element.toString);
+
     if (text == "" || element == DocumentApp.ElementType.PAGE_BREAK) {
         return "";
     }
@@ -81,3 +83,21 @@ function convertHeader(heading) {
 
     return "";
 }
+
+function convertListItemToMarkdown(listItem) {
+    let symbol = listItem.getGlyphType();
+
+    if (symbol == "NUMBER") {
+        symbol = "1. ";
+    } else if (symbol.toString().startsWith("LATIN")) {
+        symbol = "a. ";
+    } else if (symbol.toString().startsWith("ROMAN")) {
+        symbol = "i. ";
+    } else {
+        symbol = "- ";
+    }
+
+    let text = listItem.getText();
+    return symbol + text + "\n";
+}
+
