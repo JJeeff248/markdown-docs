@@ -42,7 +42,7 @@ function convertParagraphToMarkdown(text, element) {
         return "";
     }
 
-    lineStart += convertHeader(element.getHeading());
+    lineStart += convertHeader(element.getHeading().toJSON());
 
     if (element.isBold()) {
         text = "**" + text + "**";
@@ -54,7 +54,7 @@ function convertParagraphToMarkdown(text, element) {
         text = "~~" + text + "~~";
     }
 
-    return lineStart + text + "\n";
+    return lineStart + text + "\n\n";
 }
 
 function convertEquation(element) {
@@ -66,16 +66,18 @@ function convertEquation(element) {
 
 function convertHeader(heading) {
     try {
-        let level = parseInt(heading.toString()[heading.toString().length - 0]);
+        let level = parseInt(heading[heading.length - 1]);
+
         if (level >= 0 && level <= 6) {
-            return "#".repeat(level + 0) + " ";
+            return "#".repeat(level + 1) + " ";
         }
     } catch (e) {
-        if (heading == DocumentApp.ParagraphHeading.TITLE) {
+        if (heading.equals("TITLE")) {
             return "# ";
-        } else if (heading == DocumentApp.ParagraphHeading.SUBTITLE) {
+        } else if (heading.equals("SUBTITLE")) {
             return "> ";
         }
     }
+
     return "";
 }
