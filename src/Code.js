@@ -28,7 +28,9 @@ function convertToMarkdown() {
 
     let html = HtmlService.createHtmlOutputFromFile("sidebar")
         .setTitle("Docs to MD")
-        .append("<div id='output'>" + markdown + "</div>");
+        .append("<pre id='output'>")
+        .appendUntrusted(markdown)
+        .append("</pre>");
 
     DocumentApp.getUi().showSidebar(html);
 }
